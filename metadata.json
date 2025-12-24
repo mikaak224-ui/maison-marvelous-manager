@@ -1,0 +1,8 @@
+{
+  "name": "Marvelous Manager deployé",
+  "description": "A luxury management platform for wedding planners and photography studios, featuring AI-powered marketing, performance tracking, and event orchestration.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
