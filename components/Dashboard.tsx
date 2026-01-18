@@ -11,14 +11,17 @@ interface Props {
   branch: Branch;
 }
 
-const data = [
-  { name: 'Jan', revenue: 4000, bookings: 12 },
-  { name: 'Feb', revenue: 3000, bookings: 10 },
-  { name: 'Mar', revenue: 5000, bookings: 18 },
-  { name: 'Apr', revenue: 8000, bookings: 25 },
-  { name: 'May', revenue: 9500, bookings: 30 },
-  { name: 'Jun', revenue: 12000, bookings: 42 },
-];
+const getChartData = (branch: Branch) => {
+  const multiplier = branch === 'Cameroun' ? 655 : 1;
+  return [
+    { name: 'Jan', revenue: 4000 * multiplier, bookings: 12 },
+    { name: 'Feb', revenue: 3000 * multiplier, bookings: 10 },
+    { name: 'Mar', revenue: 5000 * multiplier, bookings: 18 },
+    { name: 'Apr', revenue: 8000 * multiplier, bookings: 25 },
+    { name: 'May', revenue: 9500 * multiplier, bookings: 30 },
+    { name: 'Jun', revenue: 12000 * multiplier, bookings: 42 },
+  ];
+};
 
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
 const pieData = [
@@ -45,6 +48,7 @@ const StatCard = ({ title, value, change, icon: Icon, colorClass }: any) => (
 
 const Dashboard: React.FC<Props> = ({ branch }) => {
   const isDark = document.documentElement.classList.contains('dark');
+  const data = getChartData(branch);
 
   const formatValue = (val: number) => {
     if (branch === 'Cameroun') return (val * 655).toLocaleString() + ' XAF';
@@ -56,27 +60,24 @@ const Dashboard: React.FC<Props> = ({ branch }) => {
       <div className="flex justify-between items-end">
         <div>
           <h2 className="text-5xl font-display font-bold text-slate-900 dark:text-white">La Maison Marvelous</h2>
-          <p className="text-slate-500 mt-2 font-medium italic">Vue d'ensemble : Succursale {branch}.</p>
+          <p className="text-slate-500 mt-2 font-medium italic">Performance {branch === 'Global' ? 'Consolidée' : `Succursale ${branch}`}.</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-6 py-3 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/5 rounded-2xl text-xs font-bold text-slate-500 dark:text-slate-400 shadow-sm">
-            Rapport PDF
-          </button>
-          <button className="px-6 py-3 bg-emerald-600 rounded-2xl text-xs font-bold text-white shadow-xl shadow-emerald-900/20 transition-all">
-            Nouveau Projet
+          <button className="px-6 py-3 glass dark:bg-white/5 border border-slate-200 dark:border-white/5 rounded-2xl text-xs font-bold text-slate-500 dark:text-slate-400 shadow-sm">
+            Exporter Rapport
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Chiffre d'affaires" value={formatValue(45280)} change="+12.5%" icon={DollarSign} colorClass="bg-emerald-600" />
-        <StatCard title="Prochains Mariages" value="24" change="+2" icon={Calendar} colorClass="bg-blue-600" />
-        <StatCard title="Clients Actifs" value="156" change="+8.2%" icon={Users} colorClass="bg-amber-600" />
-        <StatCard title="Note Moyenne" value="4.9/5" change="+0.1" icon={Star} colorClass="bg-rose-600" />
+        <StatCard title="Chiffre d'affaires" value={formatValue(branch === 'Global' ? 85280 : 45280)} change="+12.5%" icon={DollarSign} colorClass="bg-emerald-600" />
+        <StatCard title="Prochaines Sessions" value={branch === 'Cameroun' ? "18" : "24"} change="+2" icon={Calendar} colorClass="bg-blue-600" />
+        <StatCard title="Clients VIP" value={branch === 'Global' ? "312" : "156"} change="+8.2%" icon={Users} colorClass="bg-amber-600" />
+        <StatCard title="Note Moyenne" value="4.95/5" change="+0.1" icon={Star} colorClass="bg-rose-600" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900/50 p-8 rounded-[2.5rem] border border-slate-200 dark:border-white/5">
+        <div className="lg:col-span-2 glass dark:bg-slate-900/50 p-8 rounded-[2.5rem] border border-slate-200 dark:border-white/5">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-8">Flux de Trésorerie ({branch})</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
@@ -100,8 +101,8 @@ const Dashboard: React.FC<Props> = ({ branch }) => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900/50 p-8 rounded-[2.5rem] border border-slate-200 dark:border-white/5 flex flex-col items-center">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-8 self-start">Segmentation</h3>
+        <div className="glass dark:bg-slate-900/50 p-8 rounded-[2.5rem] border border-slate-200 dark:border-white/5 flex flex-col items-center">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-8 self-start">Répartition Activité</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
